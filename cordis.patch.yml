@@ -1,0 +1,5 @@
+# dsh-maestro-diagram bundle patch — Host-only plugin, inject sessions+tools.
+- insert:
+    - id: dsh-maestro-diagram
+      name: '@ddtcorex/dsh-maestro-diagram'
+      inject: ['sessions', 'tools']
