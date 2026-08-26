@@ -1,4 +1,5 @@
 import type { Context } from '@deepseek-ai/cordis';
+import { mermaidVerify } from './verify.js';
 
 // Reserved RPC channel for future Client preview (must match /^\/[A-Za-z0-9._~-]+$/)
 export const CHANNEL = '/dsh-maestro-diagram';
@@ -9,16 +10,14 @@ const plugin = {
     ctx.effect(() =>
       (ctx as any).tools.register({
         name: 'mermaid_verify',
-        description: 'Verify Mermaid syntax (placeholder — full impl in verify.ts)',
+        description: 'Verify Mermaid syntax, returns {ok, errors, warnings}',
         schema: {
           input: { type: 'string', description: 'Mermaid source or file content' },
           isPath: { type: 'boolean', optional: true },
           strict: { type: 'boolean', optional: true },
         } as any,
-        handler: async (args: { input: string; isPath?: boolean; strict?: boolean }) => {
-          void args;
-          return { ok: true, errors: [] };
-        },
+        handler: async (args: { input: string; isPath?: boolean; strict?: boolean }) =>
+          mermaidVerify(args.input, args.isPath, args.strict),
       }),
     );
   },
