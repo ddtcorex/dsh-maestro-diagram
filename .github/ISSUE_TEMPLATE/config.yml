@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or Discussion
+    url: https://github.com/ddtcorex/dsh-maestro-diagram/discussions
+    about: Ask a question or start a discussion
+  - name: Security Advisory (private)
+    url: https://github.com/ddtcorex/dsh-maestro-diagram/security/advisories/new
+    about: Report a security vulnerability privately — do not file a public issue

@@ -1,0 +1,49 @@
+# AGENTS.md — dsh-maestro-diagram
+
+> `CLAUDE.md` at the repo root is a symlink to `AGENTS.md`. Claude Code follows the same rule set as Codex CLI. Only edit `AGENTS.md` — never edit `CLAUDE.md` directly or replace the symlink with a copy.
+
+## Purpose
+
+Maestro diagram studio — `mermaid_verify` + `mermaid_drift` tools (hybrid with `diagram-studio` skill). One Cordis row (`id: maestro-diagram`) host-only.
+
+Names by boundary: npm package = `@ddtcorex/dsh-maestro-diagram`; Cordis patch row id = `maestro-diagram`.
+
+Part of the Maestro Harness suite (installed as a DSH plugin). Extracted from `cathrynlavery/diagram-design` (MIT) — see `maestro-skills/skills/diagram-studio/references/diagram-design-learnings.md`.
+
+## Layout
+
+- `src/host/index.ts` — host `apply()`: registers `mermaid_verify` + `mermaid_drift` tools via `ctx.tools.register` (zod), RPC channel `/dsh-maestro-diagram` (reserved for future Client preview, must match `/^\/[A-Za-z0-9._~-]+$/`).
+- `src/host/verify.ts` — `mermaidVerify(src, isPath, strict)` — `mermaid.parse()` + optional `mermaid-cli` validate, returns `{ok, errors, warnings}`. Anti-patterns (`shadow:true`, `graph` legacy) reported as warnings in strict mode.
+- `src/host/drift.ts` — `mermaidDrift(diagram, roots)` — parses `nodes/edges` from ```mermaid blocks, scans code symbols, reports `{missingInCode, staleEdges, missingInDiagram}`. Excludes `subgraph` ids and `pad*` spacers.
+- `src/host/types.ts` — shared types for verify/drift.
+- `lib/` — committed build output (`rootDir: src/host` so `lib/index.js` flat, not `lib/host/`). Generated; do not hand-edit.
+- `tests/*.spec.ts` — vitest suites.
+- `README.md` — Supported Cases (5 types × 2 audiences × 3 outputs).
+
+## Development
+
+- `pnpm verify` — lint + typecheck + tests (if script exists)
+- `pnpm test` — `vitest run`
+- `pnpm run build` — `tsc -p tsconfig.json` (check `test -f lib/index.js` after)
+- Host-only package: `"rootDir": "src/host"` in `tsconfig.json` so build emits flat `lib/index.js` (boot crash otherwise: `ERR_MODULE_NOT_FOUND`). `allowBuilds.esbuild: true` in `pnpm-workspace.yaml`.
+
+## Cordis
+
+- Host-only, `isolate` not needed (no session-local service). Declare `inject` if needed for `tools` ordering.
+- Channel `/dsh-maestro-diagram` reserved for future Client preview (Client→Host `harness.handle`/`host.call` with JSON).
+
+## Release
+
+- Version in `package.json` (`0.1.0` initial, `private:false`). Publish with `pnpm publish --access public` (rewrites `workspace:^`).
+- Tag `vX.Y.Z` and push triggers no auto-release workflow (fleet `dsh-maestro-*` has no `release.yml` — manual `gh release create`).
+- Branch protection on `master` (`require PR 1, dismiss stale, enforce_admins, required status checks CI/verify, linear history`).
+
+## Security
+
+- No private strings in code/docs (`grep -r bebe9` 0). `secret_scanning` + `push_protection` enabled. Visibility `PUBLIC` intentional.
+
+## References
+
+- Skill: `maestro-skills/skills/diagram-studio` (editorial discipline, audience rules, style-guide)
+- Learnings: `maestro-skills/skills/diagram-studio/references/diagram-design-learnings.md` (MIT attribution)
+- Cheatsheet: `maestro-skills/skills/diagram-studio/references/cheatsheet.md` (5 types)
