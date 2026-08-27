@@ -7,29 +7,39 @@ export function parseMermaid(src: string): { nodes: string[]; edges: { from: str
   const nodesSet = new Set<string>();
   const edges: { from: string; to: string }[] = [];
 
+  // Collect subgraph ids to exclude them from node set (they are layout containers, not code symbols)
+  const subgraphIds = new Set<string>();
+  const subgraphRe = /subgraph\s+(\w+)/g;
+  let sm: RegExpExecArray | null;
+  while ((sm = subgraphRe.exec(content)) !== null) {
+    subgraphIds.add(sm[1]);
+  }
+
   const bracketRe = /(\w+)\s*\["/g;
   let m: RegExpExecArray | null;
   while ((m = bracketRe.exec(content)) !== null) {
-    nodesSet.add(m[1]);
+    const id = m[1];
+    if (subgraphIds.has(id)) continue; // skip subgraph container ids (Core, OpsStudio, etc.)
+    nodesSet.add(id);
   }
 
   const edgeRe = /(\w+)\s*(?:-->|---|-\.->|--->)\s*(\w+)/g;
   while ((m = edgeRe.exec(content)) !== null) {
     const from = m[1];
     const to = m[2];
-    nodesSet.add(from);
-    nodesSet.add(to);
+    if (!subgraphIds.has(from)) nodesSet.add(from);
+    if (!subgraphIds.has(to)) nodesSet.add(to);
     edges.push({ from, to });
   }
 
   // fallback generic arrow capture for nodes not yet caught (keep simple heuristic)
   const leftArrowRe = /(\w+)\s*-->/g;
   while ((m = leftArrowRe.exec(content)) !== null) {
-    nodesSet.add(m[1]);
+    if (!subgraphIds.has(m[1])) nodesSet.add(m[1]);
   }
   const rightArrowRe = /-->\s*(\w+)/g;
   while ((m = rightArrowRe.exec(content)) !== null) {
-    nodesSet.add(m[1]);
+    if (!subgraphIds.has(m[1])) nodesSet.add(m[1]);
   }
 
   // also handle -- and -.-> generically if not already captured
