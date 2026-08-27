@@ -20,6 +20,12 @@ export function parseMermaid(src: string): { nodes: string[]; edges: { from: str
   while ((m = bracketRe.exec(content)) !== null) {
     const id = m[1];
     if (subgraphIds.has(id)) continue; // skip subgraph container ids (Core, OpsStudio, etc.)
+    if (/^pad/i.test(id)) continue; // spacer nodes for header top gap — not code symbols
+    if (/\bspacer\b/i.test(content.slice(m.index, m.index + 200))) {
+      // check if this node is defined with :::spacer class nearby — skip spacer nodes
+      const snippet = content.slice(m.index, m.index + 300);
+      if (/:::spacer/.test(snippet)) continue;
+    }
     nodesSet.add(id);
   }
 
@@ -27,19 +33,19 @@ export function parseMermaid(src: string): { nodes: string[]; edges: { from: str
   while ((m = edgeRe.exec(content)) !== null) {
     const from = m[1];
     const to = m[2];
-    if (!subgraphIds.has(from)) nodesSet.add(from);
-    if (!subgraphIds.has(to)) nodesSet.add(to);
+    if (!subgraphIds.has(from) && !/^pad/i.test(from)) nodesSet.add(from);
+    if (!subgraphIds.has(to) && !/^pad/i.test(to)) nodesSet.add(to);
     edges.push({ from, to });
   }
 
   // fallback generic arrow capture for nodes not yet caught (keep simple heuristic)
   const leftArrowRe = /(\w+)\s*-->/g;
   while ((m = leftArrowRe.exec(content)) !== null) {
-    if (!subgraphIds.has(m[1])) nodesSet.add(m[1]);
+    if (!subgraphIds.has(m[1]) && !/^pad/i.test(m[1])) nodesSet.add(m[1]);
   }
   const rightArrowRe = /-->\s*(\w+)/g;
   while ((m = rightArrowRe.exec(content)) !== null) {
-    if (!subgraphIds.has(m[1])) nodesSet.add(m[1]);
+    if (!subgraphIds.has(m[1]) && !/^pad/i.test(m[1])) nodesSet.add(m[1]);
   }
 
   // also handle -- and -.-> generically if not already captured
