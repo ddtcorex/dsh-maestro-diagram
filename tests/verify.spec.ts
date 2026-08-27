@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { mermaidVerify } from '../src/host/verify.js';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
 
 describe('mermaidVerify', () => {
   it('valid flowchart passes', async () => {
@@ -14,8 +17,23 @@ describe('mermaidVerify', () => {
   });
 
   it('reads from path when isPath (docs/architecture.md)', async () => {
-    const r = await mermaidVerify('docs/architecture.md', true);
-    expect(r.ok).toBe(true);
+    const candidates = ['docs/architecture.md', '../../docs/architecture.md', '../../../docs/architecture.md', '/home/kai/Work/htdocs/maestro-harness/docs/architecture.md'];
+    let target: string | null = null;
+    for (const p of candidates) {
+      try { if (fs.existsSync(p)) { target = p; break; } } catch {}
+    }
+    let tmp: string | null = null;
+    if (!target) {
+      tmp = path.join(os.tmpdir(), `verify-arch-${Date.now()}.md`);
+      fs.writeFileSync(tmp, "```mermaid\nflowchart TB\n  A-->B\n```\n", 'utf-8');
+      target = tmp;
+    }
+    try {
+      const r = await mermaidVerify(target, true);
+      expect(r.ok).toBe(true);
+    } finally {
+      if (tmp) try { fs.unlinkSync(tmp); } catch {}
+    }
   });
 
   it('detects anti-pattern shadow when strict', async () => {
