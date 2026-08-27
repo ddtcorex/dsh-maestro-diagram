@@ -7,7 +7,13 @@ import { mermaidDrift } from '../src/host/drift.js';
 describe('mermaidDrift', () => {
   it('harness architecture has no drift after fix', async () => {
     // In standalone diagram repo CI, docs/architecture.md is at maestro-harness/docs, not packages/dsh-maestro-diagram/docs
-    const candidates = ['docs/architecture.md', '../../docs/architecture.md', '../../../docs/architecture.md', '/home/kai/Work/htdocs/maestro-harness/docs/architecture.md'];
+    const candidates = [
+      'docs/architecture.md',
+      '../../docs/architecture.md',
+      '../../../docs/architecture.md',
+      process.env.MAESTRO_HARNESS_ROOT ? path.join(process.env.MAESTRO_HARNESS_ROOT, 'docs/architecture.md') : null,
+      path.join(os.homedir(), 'Work/htdocs/maestro-harness/docs/architecture.md'),
+    ].filter(Boolean) as string[];
     let target = candidates.find(p => {
       try { return fs.existsSync(p); } catch { return false; }
     });
