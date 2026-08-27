@@ -17,7 +17,13 @@ describe('mermaidVerify', () => {
   });
 
   it('reads from path when isPath (docs/architecture.md)', async () => {
-    const candidates = ['docs/architecture.md', '../../docs/architecture.md', '../../../docs/architecture.md', '/home/kai/Work/htdocs/maestro-harness/docs/architecture.md'];
+    const candidates = [
+      'docs/architecture.md',
+      '../../docs/architecture.md',
+      '../../../docs/architecture.md',
+      process.env.MAESTRO_HARNESS_ROOT ? path.join(process.env.MAESTRO_HARNESS_ROOT, 'docs/architecture.md') : null,
+      path.join(os.homedir(), 'Work/htdocs/maestro-harness/docs/architecture.md'),
+    ].filter(Boolean) as string[];
     let target: string | null = null;
     for (const p of candidates) {
       try { if (fs.existsSync(p)) { target = p; break; } } catch {}
