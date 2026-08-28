@@ -35,8 +35,9 @@ Part of the Maestro Harness suite (installed as a DSH plugin). Extracted from `c
 ## Release
 
 - Version in `package.json` (`0.1.0` initial, `private:false`). Publish with `pnpm publish --access public` (rewrites `workspace:^`).
-- Tag `vX.Y.Z` and push triggers no auto-release workflow (fleet `dsh-maestro-*` has no `release.yml` — manual `gh release create`).
-- Branch protection on `master` (`require PR 1, dismiss stale, enforce_admins, required status checks CI/verify, linear history`).
+- **Always request approval before tagging or publishing** — `git tag vX.Y.Z` / `pnpm publish` / `gh release create` only after explicit human `APPROVED` (see workspace `AGENTS.md` Git Rules). Never tag/publish without approval.
+- Tag `vX.Y.Z` push triggers `dsh-maestro-ci` reusable `node-release.yml` via `.github/workflows/release.yml` (`pnpm publish --access public` + GitHub Release).
+- Branch protection on `master` (`require PR 0, dismiss stale, enforce_admins, required status checks verify / verify, linear history`).
 
 ## Security
 
