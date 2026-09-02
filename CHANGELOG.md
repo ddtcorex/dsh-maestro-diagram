@@ -4,6 +4,13 @@ All notable changes to this project are documented in this file. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-09-03
+
+### Changed
+
+- Anonymize local-home path in CHANGELOG (placeholder `~/`) per public-docs blacklist (#7).
+
+
 ## [0.1.1] - 2026-09-02
 
 ### Fixed
