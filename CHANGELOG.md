@@ -8,7 +8,7 @@ All notable changes to this project are documented in this file. Format follows
 
 ### Fixed
 
-- Remove hardcoded /home/kai fallback in diagram tests (#3).
+- Remove hardcoded `~/` fallback in diagram tests (#3).
 
 ### Changed
 
