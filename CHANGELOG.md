@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-09-02
+
+### Fixed
+
+- Remove hardcoded /home/kai fallback in diagram tests (#3).
+
+### Changed
+
+- Bump dsh-maestro-ci pin to e2448b1 (#5), sync community files and CHANGELOG (#4), unify release via reusable node-release (#2), add CONTRIBUTING/CODEOWNERS (#1).
+
+
 ## [0.1.0] - 2026-08-27
 
 Initial release of `@ddtcorex/dsh-maestro-diagram` — host-only Cordis plugin
