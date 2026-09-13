@@ -6,13 +6,17 @@ import { mermaidDrift } from '../src/host/drift.js';
 
 describe('mermaidDrift', () => {
   it('harness architecture has no drift after fix', async () => {
-    // In standalone diagram repo CI, docs/architecture.md is at maestro-harness/docs, not packages/dsh-maestro-diagram/docs
+    // Candidates stay repo-relative on purpose. A sandbox rehearsal (and CI)
+    // has no workspace around the checkout and must take the lenient stub path
+    // below; the removed `$HOME/Work/htdocs/...` guess made the same test
+    // assert strictly against the developer's real workspace while CI could
+    // not, so the pre-push gate failed on exactly the machine where CI passed.
+    // Point MAESTRO_HARNESS_ROOT at a workspace to opt into the strict check.
     const candidates = [
       'docs/architecture.md',
       '../../docs/architecture.md',
       '../../../docs/architecture.md',
       process.env.MAESTRO_HARNESS_ROOT ? path.join(process.env.MAESTRO_HARNESS_ROOT, 'docs/architecture.md') : null,
-      path.join(os.homedir(), 'Work/htdocs/maestro-harness/docs/architecture.md'),
     ].filter(Boolean) as string[];
     let target = candidates.find(p => {
       try { return fs.existsSync(p); } catch { return false; }
