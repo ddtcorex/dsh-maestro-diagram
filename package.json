@@ -5,6 +5,13 @@
   "type": "module",
   "packageManager": "pnpm@11.7.0",
   "description": "Maestro diagram studio: mermaid_verify + mermaid_drift tools (hybrid with diagram-studio skill)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddtcorex/dsh-maestro-diagram.git"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
   "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
