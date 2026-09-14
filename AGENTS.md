@@ -41,7 +41,7 @@ Part of the Maestro Harness suite (installed as a DSH plugin). Extracted from `c
 
 ## Security
 
-- No private strings in code/docs (`grep -r bebe9` 0). `secret_scanning` + `push_protection` enabled. Visibility `PUBLIC` intentional.
+- No private strings in code/docs (blacklist scan clean). `secret_scanning` + `push_protection` enabled. Visibility `PUBLIC` intentional.
 
 ## References
 
