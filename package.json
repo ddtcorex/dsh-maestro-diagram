@@ -1,6 +1,6 @@
 {
   "name": "@ddtcorex/dsh-maestro-diagram",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": false,
   "type": "module",
   "packageManager": "pnpm@11.7.0",
