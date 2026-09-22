@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-09-22
+
+### Changed
+
+- Declare package license, repository and Node engine range in the manifest (#10).
+- Drop the self-referential private slug from the security line (#11).
+- Correct the `lib/` build-output claim in the docs (#9).
+
 ## [0.1.2] - 2026-09-03
 
 ### Changed
